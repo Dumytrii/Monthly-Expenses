@@ -178,6 +178,42 @@
             overflow: hidden;
         }
 
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .summary-card:nth-child(1)::before {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+        }
+
+        .summary-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+        }
+
+        .summary-card:nth-child(3)::before {
+            background: linear-gradient(90deg, #9b59b6, #8e44ad);
+        }
+
+        .summary-card:nth-child(4)::before {
+            background: linear-gradient(90deg, #e67e22, #d35400);
+        }
+
+        .summary-card:nth-child(5)::before {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+
+        .summary-card:nth-child(6)::before {
+            background: linear-gradient(90deg, #27ae60, #229954);
+        }
+
         .summary-card:hover {
             transform: translateY(-5px);
         }
@@ -902,6 +938,7 @@
                 <button class="nav-tab" onclick="showTab('heatmap')">📅 Heatmap</button>
                 <button class="nav-tab" onclick="showTab('insights')">🧠 AI Insights</button>
                 <button class="nav-tab" onclick="showTab('comparison')">📊 Compare</button>
+                <button class="nav-tab" onclick="showTab('export')">📤 Export</button>
             </div>
             
             <div class="month-selector">
@@ -1113,6 +1150,45 @@
             
             <div class="comparison-container" id="comparisonContainer"></div>
         </div>
+
+        <!-- Export Tab -->
+        <div id="export-tab" class="tab-content">
+            <div class="insights-panel">
+                <h3 class="insights-title">📤 Export Daily Expenses</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 25px;">
+                    Export your daily expense data to Excel. Only days with actual expenses will be included.
+                </p>
+                
+                <div style="background: var(--summary-bg); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 15px; color: var(--text-primary);">📋 Export Preview</h4>
+                    <div id="exportPreview" style="color: var(--text-secondary); line-height: 1.6;">
+                        <em>Loading preview...</em>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="exportDailyExpenses()" 
+                            style="padding: 15px 30px; font-size: 16px; min-width: 200px;">
+                        📊 Export to Excel
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateExportPreview()" 
+                            style="padding: 15px 30px; font-size: 16px;">
+                        🔄 Refresh Preview
+                    </button>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: rgba(52, 152, 219, 0.1); border-radius: 10px; border-left: 4px solid #3498db;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 10px;">ℹ️ Export Information</h4>
+                    <ul style="color: var(--text-secondary); line-height: 1.8; margin: 0; padding-left: 20px;">
+                        <li>File will be saved as CSV format (opens perfectly in Excel)</li>
+                        <li>Only days with recorded expenses will be included</li>
+                        <li>All expense details: amount, category, description, necessity level</li>
+                        <li>Daily totals and running totals included</li>
+                        <li>Proper formatting for Excel analysis and charts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Quick Add Modal -->
@@ -1243,6 +1319,9 @@
                     break;
                 case 'comparison':
                     createComparison();
+                    break;
+                case 'export':
+                    generateExportPreview();
                     break;
                 default:
                     // Dashboard tab
@@ -1601,8 +1680,6 @@
             }
         }
 
-
-
         // Budget management
         function createBudgetGrid() {
             const grid = document.getElementById('budgetGrid');
@@ -1830,6 +1907,159 @@
                     </div>
                 </div>
             `;
+        }
+
+        // Export Functions for Daily Data
+        function generateExportPreview() {
+            const preview = document.getElementById('exportPreview');
+            if (!preview) return;
+
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Count days with actual expenses and total expenses
+            let daysWithData = 0;
+            let totalExpenses = 0;
+            let totalAmount = 0;
+            
+            Object.keys(expenses).forEach(key => {
+                if (key.startsWith(currentMonth + '-')) {
+                    const dayExpenses = expenses[key].filter(exp => exp.amount > 0 && exp.category && exp.description);
+                    if (dayExpenses.length > 0) {
+                        daysWithData++;
+                        totalExpenses += dayExpenses.length;
+                        totalAmount += dayExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+                    }
+                }
+            });
+
+            let previewText = `<strong>📊 Export Summary for ${monthNames[currentMonth]} 2025</strong><br><br>`;
+            
+            if (daysWithData === 0) {
+                previewText += `<span style="color: #e74c3c;">❌ No expense data found for this month</span><br>`;
+                previewText += `Add some expenses first before exporting.`;
+            } else {
+                previewText += `✅ <strong>Days with expenses:</strong> ${daysWithData} days<br>`;
+                previewText += `📝 <strong>Total expense entries:</strong> ${totalExpenses} items<br>`;
+                previewText += `💰 <strong>Total amount:</strong> €${totalAmount.toFixed(2)}<br>`;
+                previewText += `📈 <strong>Average per day:</strong> €${(totalAmount / daysWithData).toFixed(2)}<br><br>`;
+                
+                previewText += `<strong>📋 Export will include:</strong><br>`;
+                previewText += `• Day-by-day breakdown with dates<br>`;
+                previewText += `• All expense details (amount, category, description, necessity)<br>`;
+                previewText += `• Daily totals and running totals<br>`;
+                previewText += `• CSV format optimized for Excel analysis<br>`;
+            }
+
+            preview.innerHTML = previewText;
+        }
+
+        function exportDailyExpenses() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Check if there's data to export
+            let hasData = false;
+            Object.keys(expenses).forEach(key => {
+                if (key.startsWith(currentMonth + '-')) {
+                    const dayExpenses = expenses[key].filter(exp => exp.amount > 0 && exp.category && exp.description);
+                    if (dayExpenses.length > 0) {
+                        hasData = true;
+                    }
+                }
+            });
+
+            if (!hasData) {
+                showToast('No expense data to export for this month', 'warning');
+                return;
+            }
+
+            showToast('Generating export file...', 'info');
+
+            // Create CSV content
+            let csvContent = '';
+            
+            // Header information
+            csvContent += `"Daily Expenses Report"\n`;
+            csvContent += `"Month: ${monthNames[currentMonth]} 2025"\n`;
+            csvContent += `"Generated: ${new Date().toLocaleString()}"\n`;
+            csvContent += `\n`;
+            
+            // Column headers
+            csvContent += `"Day","Date","Amount (€)","Category","Description","Necessity","Daily Total (€)","Running Total (€)"\n`;
+            
+            // Get all days with data, sorted
+            const daysWithData = [];
+            Object.keys(expenses).forEach(key => {
+                if (key.startsWith(currentMonth + '-')) {
+                    const day = parseInt(key.split('-')[1]);
+                    const dayExpenses = expenses[key].filter(exp => exp.amount > 0 && exp.category && exp.description);
+                    if (dayExpenses.length > 0) {
+                        daysWithData.push({ day, expenses: dayExpenses });
+                    }
+                }
+            });
+            
+            // Sort by day
+            daysWithData.sort((a, b) => a.day - b.day);
+            
+            let runningTotal = 0;
+            
+            // Add data for each day
+            daysWithData.forEach(({ day, expenses: dayExpenses }) => {
+                const date = new Date(2025, currentMonth, day);
+                const dateStr = date.toLocaleDateString('en-GB'); // DD/MM/YYYY format
+                const dayTotal = dayExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+                runningTotal += dayTotal;
+                
+                dayExpenses.forEach((expense, index) => {
+                    csvContent += `"${day}","${dateStr}","${expense.amount.toFixed(2)}","${expense.category}","${expense.description}","${expense.necessity}"`;
+                    
+                    // Add daily total only on first row of each day
+                    if (index === 0) {
+                        csvContent += `,"${dayTotal.toFixed(2)}","${runningTotal.toFixed(2)}"`;
+                    } else {
+                        csvContent += `,"",""`;
+                    }
+                    
+                    csvContent += `\n`;
+                });
+                
+                // Add empty row between days for better readability
+                csvContent += `\n`;
+            });
+            
+            // Add summary at the end
+            csvContent += `\n`;
+            csvContent += `"=== SUMMARY ==="\n`;
+            csvContent += `"Total Days with Expenses","${daysWithData.length}"\n`;
+            csvContent += `"Total Expense Entries","${daysWithData.reduce((sum, day) => sum + day.expenses.length, 0)}"\n`;
+            csvContent += `"Total Amount","€${runningTotal.toFixed(2)}"\n`;
+            csvContent += `"Average per Day","€${(runningTotal / daysWithData.length).toFixed(2)}"\n`;
+            
+            // Create and download the file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const fileName = `Daily_Expenses_${monthNames[currentMonth]}_2025.csv`;
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', fileName);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast('✅ Export completed! File downloaded successfully.', 'success');
+                
+                // Update the preview to show export was completed
+                setTimeout(() => {
+                    generateExportPreview();
+                }, 500);
+            } else {
+                showToast('Download not supported in this browser', 'error');
+            }
         }
 
         // Quick add functionality
