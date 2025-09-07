@@ -174,6 +174,7 @@
             color: var(--input-focus);
             text-decoration: none;
             font-weight: 600;
+            cursor: pointer;
         }
 
         .auth-switch a:hover {
@@ -727,7 +728,7 @@
                     </div>
                     <button id="loginBtn" class="btn btn-primary">Sign In</button>
                     <div class="auth-switch">
-                        Don't have an account? <a href="#" id="showRegister">Create one</a>
+                        Don't have an account? <a id="showRegister">Create one</a>
                     </div>
                 </div>
                 
@@ -744,7 +745,7 @@
                     </div>
                     <button id="registerBtn" class="btn btn-primary">Create Account</button>
                     <div class="auth-switch">
-                        Already have an account? <a href="#" id="showLogin">Sign in</a>
+                        Already have an account? <a id="showLogin">Sign in</a>
                     </div>
                 </div>
             </div>
@@ -753,7 +754,7 @@
         <!-- App Section -->
         <div id="appSection" class="hidden">
             <div class="header">
-                <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                <button class="theme-toggle" id="themeToggle">
                     🌙 Dark Mode
                 </button>
                 
@@ -766,11 +767,11 @@
                 <p>Track your daily expenses and identify wasteful spending</p>
                 
                 <div class="nav-tabs">
-                    <button class="nav-tab active" onclick="showTab('dashboard')">📊 Dashboard</button>
-                    <button class="nav-tab" onclick="showTab('analytics')">📈 Analytics</button>
-                    <button class="nav-tab" onclick="showTab('budgets')">💰 Budgets</button>
-                    <button class="nav-tab" onclick="showTab('insights')">🧠 AI Insights</button>
-                    <button class="nav-tab" onclick="showTab('export')">📤 Export</button>
+                    <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
+                    <button class="nav-tab" data-tab="analytics">📈 Analytics</button>
+                    <button class="nav-tab" data-tab="budgets">💰 Budgets</button>
+                    <button class="nav-tab" data-tab="insights">🧠 AI Insights</button>
+                    <button class="nav-tab" data-tab="export">📤 Export</button>
                 </div>
                 
                 <div class="month-selector">
@@ -927,20 +928,20 @@
                 <input type="number" id="quickDay" min="1" max="31" value="1">
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeQuickAdd()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveQuickAdd()">Add Expense</button>
+                <button class="btn btn-secondary" id="cancelQuickAdd">Cancel</button>
+                <button class="btn btn-primary" id="saveQuickAdd">Add Expense</button>
             </div>
         </div>
     </div>
 
     <!-- Floating Add Button -->
-    <button class="floating-add-btn" onclick="openQuickAdd()" id="floatingBtn" style="display: none;">+</button>
+    <button class="floating-add-btn" id="floatingBtn" style="display: none;">+</button>
 
     <!-- Toast Notifications -->
     <div id="toast" class="toast"></div>
 
-    <!-- Firebase SDK -->
     <script type="module">
+        // Import Firebase functions
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -974,7 +975,7 @@
 
         const necessityLevels = ['Essential', 'Important', 'Nice to have', 'Unnecessary'];
 
-        // Authentication functions
+        // Utility functions
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.textContent = message;
@@ -1014,9 +1015,9 @@
             }
         });
 
-        // Login
+        // Authentication event listeners
         document.getElementById('loginBtn').addEventListener('click', async () => {
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
             if (!email || !password) {
@@ -1028,13 +1029,13 @@
                 await signInWithEmailAndPassword(auth, email, password);
                 showToast('Successfully signed in!', 'success');
             } catch (error) {
+                console.error('Login error:', error);
                 showError(error.message);
             }
         });
 
-        // Register
         document.getElementById('registerBtn').addEventListener('click', async () => {
-            const email = document.getElementById('registerEmail').value;
+            const email = document.getElementById('registerEmail').value.trim();
             const password = document.getElementById('registerPassword').value;
 
             if (!email || !password) {
@@ -1051,21 +1052,22 @@
                 await createUserWithEmailAndPassword(auth, email, password);
                 showToast('Account created successfully!', 'success');
             } catch (error) {
+                console.error('Registration error:', error);
                 showError(error.message);
             }
         });
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             try {
                 await signOut(auth);
                 showToast('Successfully signed out!', 'success');
             } catch (error) {
+                console.error('Logout error:', error);
                 showError(error.message);
             }
         });
 
-        // Auth form switching
+        // Form switching
         document.getElementById('showRegister').addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('loginForm').classList.add('hidden');
@@ -1083,7 +1085,6 @@
             if (!currentUser) return;
 
             try {
-                // Load expenses
                 const expensesDoc = await getDoc(doc(db, 'users', currentUser.uid, 'data', 'expenses'));
                 if (expensesDoc.exists()) {
                     expenses = expensesDoc.data() || {};
@@ -1091,7 +1092,6 @@
                     expenses = {};
                 }
 
-                // Load budgets
                 const budgetsDoc = await getDoc(doc(db, 'users', currentUser.uid, 'data', 'budgets'));
                 if (budgetsDoc.exists()) {
                     budgets = budgetsDoc.data() || {};
@@ -1135,7 +1135,7 @@
             initializeTheme();
             initializeTable();
             updateSummary();
-            showTab('dashboard');
+            setupEventListeners();
         }
 
         // Theme management
@@ -1145,7 +1145,7 @@
             updateThemeToggleText(savedTheme);
         }
 
-        window.toggleTheme = function() {
+        function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
@@ -1159,31 +1159,48 @@
         }
 
         // Tab management
-        window.showTab = function(tabName) {
-            // Hide all tabs
+        function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Remove active class from all nav tabs
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Show selected tab
             document.getElementById(tabName + '-tab').classList.add('active');
-            event.target.classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
             
             activeTab = tabName;
             
-            // Load tab-specific content
-            switch(tabName) {
-                case 'dashboard':
-                    updateSummary();
-                    break;
-                default:
-                    break;
+            if (tabName === 'dashboard') {
+                updateSummary();
             }
+        }
+
+        // Event listeners setup
+        function setupEventListeners() {
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // Tab navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    showTab(tab.dataset.tab);
+                });
+            });
+
+            // Month selector
+            document.getElementById('monthSelect').addEventListener('change', function() {
+                currentMonth = parseInt(this.value);
+                initializeTable();
+                updateSummary();
+            });
+
+            // Quick add modal
+            document.getElementById('floatingBtn').addEventListener('click', openQuickAdd);
+            document.getElementById('cancelQuickAdd').addEventListener('click', closeQuickAdd);
+            document.getElementById('saveQuickAdd').addEventListener('click', saveQuickAdd);
         }
 
         // Table initialization
@@ -1200,7 +1217,6 @@
                     expenses[key] = [];
                 }
 
-                // Create day header row
                 const dayHeaderRow = document.createElement('tr');
                 dayHeaderRow.className = 'day-header';
                 dayHeaderRow.setAttribute('data-day', day);
@@ -1219,7 +1235,6 @@
                 dayHeaderCell.appendChild(dayText);
                 dayHeaderRow.appendChild(dayHeaderCell);
                 
-                // Create day content row
                 const dayContentRow = document.createElement('tr');
                 dayContentRow.className = 'day-content';
                 dayContentRow.id = `day-${day}-content`;
@@ -1256,7 +1271,6 @@
                 
                 populateDayExpenses(day);
                 
-                // Add click event to toggle day content
                 dayHeaderRow.addEventListener('click', function() {
                     this.classList.toggle('expanded');
                     dayContentRow.classList.toggle('show');
@@ -1310,10 +1324,10 @@
             row.innerHTML = `
                 <td>
                     <input type="number" value="${expense.amount || ''}" placeholder="0.00" step="0.01" 
-                           onchange="updateExpense(${day}, ${index}, 'amount', this.value)">
+                           data-day="${day}" data-index="${index}" data-field="amount">
                 </td>
                 <td>
-                    <select onchange="updateExpense(${day}, ${index}, 'category', this.value)">
+                    <select data-day="${day}" data-index="${index}" data-field="category">
                         <option value="">Select category</option>
                         ${categories.map(cat => 
                             `<option value="${cat}" ${expense.category === cat ? 'selected' : ''}>${cat}</option>`
@@ -1322,24 +1336,54 @@
                 </td>
                 <td>
                     <input type="text" value="${expense.description || ''}" placeholder="What did you buy?" 
-                           onchange="updateExpense(${day}, ${index}, 'description', this.value)">
+                           data-day="${day}" data-index="${index}" data-field="description">
                 </td>
                 <td>
-                    <select onchange="updateExpense(${day}, ${index}, 'necessity', this.value)">
+                    <select data-day="${day}" data-index="${index}" data-field="necessity">
                         ${necessityLevels.map(level => 
                             `<option value="${level}" ${expense.necessity === level ? 'selected' : ''}>${level}</option>`
                         ).join('')}
                     </select>
                 </td>
                 <td>
-                    <button class="remove-expense-btn" onclick="removeExpense(${day}, ${index})">Remove</button>
+                    <button class="remove-expense-btn" data-day="${day}" data-index="${index}">Remove</button>
                 </td>
             `;
+            
+            // Add event listeners
+            row.querySelectorAll('input, select').forEach(input => {
+                input.addEventListener('change', handleExpenseUpdate);
+            });
+            
+            row.querySelector('.remove-expense-btn').addEventListener('click', handleExpenseRemove);
             
             dayExpensesBody.appendChild(row);
         }
 
-        window.removeExpense = async function(day, index) {
+        async function handleExpenseUpdate(event) {
+            const day = parseInt(event.target.dataset.day);
+            const index = parseInt(event.target.dataset.index);
+            const field = event.target.dataset.field;
+            const value = event.target.value;
+            
+            const key = `${currentMonth}-${day}`;
+            
+            if (!expenses[key] || !expenses[key][index]) return;
+
+            if (field === 'amount') {
+                expenses[key][index][field] = parseFloat(value) || 0;
+            } else {
+                expenses[key][index][field] = value;
+            }
+
+            await saveExpenses();
+            updateDayHeaderTotal(day);
+            updateSummary();
+        }
+
+        async function handleExpenseRemove(event) {
+            const day = parseInt(event.target.dataset.day);
+            const index = parseInt(event.target.dataset.index);
             const key = `${currentMonth}-${day}`;
             
             if (expenses[key] && expenses[key][index]) {
@@ -1358,22 +1402,6 @@
                 populateDayExpenses(day);
                 updateSummary();
             }
-        }
-
-        window.updateExpense = async function(day, index, field, value) {
-            const key = `${currentMonth}-${day}`;
-            
-            if (!expenses[key] || !expenses[key][index]) return;
-
-            if (field === 'amount') {
-                expenses[key][index][field] = parseFloat(value) || 0;
-            } else {
-                expenses[key][index][field] = value;
-            }
-
-            await saveExpenses();
-            updateDayHeaderTotal(day);
-            updateSummary();
         }
 
         function calculateDayTotal(dayExpenses) {
@@ -1418,30 +1446,24 @@
                 }
             });
 
-            // Update basic metrics
             document.getElementById('totalAmount').textContent = `€${total.toFixed(2)}`;
             document.getElementById('wasteAmount').textContent = `€${waste.toFixed(2)}`;
             document.getElementById('avgAmount').textContent = `€${daysWithExpenses ? (total / daysWithExpenses).toFixed(2) : '0.00'}`;
             
-            // Budget calculations
             const budgetRemaining = Math.max(0, totalBudget - total);
             document.getElementById('budgetRemaining').textContent = `€${budgetRemaining.toFixed(2)}`;
             
-            // Progress bars
             const totalProgress = totalBudget > 0 ? Math.min(100, (total / totalBudget) * 100) : 0;
             document.getElementById('totalProgress').style.width = `${totalProgress}%`;
             document.getElementById('budgetProgress').style.width = `${Math.max(0, 100 - totalProgress)}%`;
             
-            // Days until broke calculation
             const dailyAverage = daysWithExpenses > 0 ? total / daysWithExpenses : 0;
             const daysUntilBroke = dailyAverage > 0 ? Math.floor(budgetRemaining / dailyAverage) : '∞';
             document.getElementById('daysUntilBroke').textContent = daysUntilBroke;
             
-            // Prediction for next month
-            const prediction = total * 1.05; // 5% increase assumption
+            const prediction = total * 1.05;
             document.getElementById('nextMonthPrediction').textContent = `€${prediction.toFixed(2)}`;
             
-            // Update progress bar colors
             const totalProgressBar = document.getElementById('totalProgress');
             if (totalProgress > 90) {
                 totalProgressBar.className = 'progress-fill over-budget';
@@ -1451,20 +1473,19 @@
         }
 
         // Quick add functionality
-        window.openQuickAdd = function(specificDay = null) {
+        function openQuickAdd(specificDay = null) {
             document.getElementById('quickAddModal').classList.add('active');
             document.getElementById('quickAmount').focus();
             
-            // Set specific day if provided, otherwise use current day
             const dayToSet = specificDay || new Date().getDate();
             document.getElementById('quickDay').value = dayToSet;
         }
 
-        window.closeQuickAdd = function() {
+        function closeQuickAdd() {
             document.getElementById('quickAddModal').classList.remove('active');
         }
 
-        window.saveQuickAdd = async function() {
+        async function saveQuickAdd() {
             const amount = parseFloat(document.getElementById('quickAmount').value);
             const category = document.getElementById('quickCategory').value;
             const description = document.getElementById('quickDescription').value;
@@ -1508,18 +1529,6 @@
                 initializeTable();
             }
         }
-
-        // Month selector event
-        document.getElementById('monthSelect').addEventListener('change', function() {
-            currentMonth = parseInt(this.value);
-            initializeTable();
-            updateSummary();
-        });
-
-        // Make functions globally available
-        window.addExpense = addExpense;
-        window.updateExpense = updateExpense;
-        window.removeExpense = removeExpense;
     </script>
 </body>
 </html>
