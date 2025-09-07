@@ -238,6 +238,181 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-light);
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-tab.active, .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .month-selector {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .month-selector select {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: var(--summary-bg);
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .summary-card:nth-child(1)::before {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+        }
+
+        .summary-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+        }
+
+        .summary-card:nth-child(3)::before {
+            background: linear-gradient(90deg, #9b59b6, #8e44ad);
+        }
+
+        .summary-card:nth-child(4)::before {
+            background: linear-gradient(90deg, #e67e22, #d35400);
+        }
+
+        .summary-card:nth-child(5)::before {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+
+        .summary-card:nth-child(6)::before {
+            background: linear-gradient(90deg, #27ae60, #229954);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .summary-card .amount {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .total { color: #3498db; }
+        .waste { color: #e74c3c; }
+        .avg { color: #f39c12; }
+        .highest { color: #9b59b6; }
+        .budget { color: #27ae60; }
+        .prediction { color: #e67e22; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .budget-progress {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+        }
+
+        .over-budget {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+
         .loading {
             display: flex;
             align-items: center;
@@ -262,34 +437,205 @@
             100% { transform: rotate(360deg); }
         }
 
-        .summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+        .table-container {
             padding: 30px;
-            background: var(--summary-bg);
+            overflow-x: auto;
         }
 
-        .summary-card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--table-bg);
+            border-radius: 10px;
+            overflow: hidden;
             box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+            color: white;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        tr:nth-child(even) {
+            background: var(--table-stripe);
+        }
+
+        tr:hover {
+            background: var(--table-hover);
+        }
+
+        .day-header {
+            font-weight: bold;
+            background: var(--day-header-bg);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .day-header:hover {
+            background: var(--day-header-hover);
+        }
+
+        .day-content {
+            display: none;
+        }
+
+        .day-content.show {
+            display: table-row;
+        }
+
+        .toggle-icon {
+            float: right;
+            transition: transform 0.3s ease;
+        }
+
+        .day-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .inner-table {
+            width: 100%;
+            margin: 10px 0;
+            border-collapse: collapse;
+        }
+
+        .inner-table th {
+            background: #95a5a6;
+            padding: 10px;
+            color: white;
+        }
+
+        .inner-table td {
+            padding: 8px;
+        }
+
+        .add-expense-btn {
+            background: linear-gradient(135deg, var(--input-focus), #2980b9);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .remove-expense-btn {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .floating-add-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-add-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(39, 174, 96, 0.4);
+        }
+
+        .quick-add-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
             transition: all 0.3s ease;
         }
 
-        .summary-card h3 {
-            color: var(--text-primary);
-            margin-bottom: 10px;
-            font-size: 1.1em;
+        .quick-add-modal.active {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .summary-card .amount {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--input-focus);
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .quick-add-modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .toast {
@@ -335,6 +681,24 @@
                 position: static;
                 justify-content: center;
                 margin-top: 15px;
+            }
+            
+            .theme-toggle {
+                position: static;
+                margin-bottom: 15px;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .floating-add-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
             }
         }
     </style>
@@ -390,13 +754,42 @@
         <!-- App Section -->
         <div id="appSection" class="hidden">
             <div class="header">
+                <button class="theme-toggle" id="themeToggle">
+                    🌙 Dark Mode
+                </button>
+                
                 <div class="user-info">
                     <span class="user-email" id="userEmail"></span>
                     <button id="logoutBtn" class="logout-btn">Logout</button>
                 </div>
                 
                 <h1>💰 Monthly Expense Tracker</h1>
-                <p>Welcome! Your expenses are now stored securely in the cloud.</p>
+                <p>Track your daily expenses and identify wasteful spending</p>
+                
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
+                    <button class="nav-tab" data-tab="analytics">📈 Analytics</button>
+                    <button class="nav-tab" data-tab="budgets">💰 Budgets</button>
+                    <button class="nav-tab" data-tab="insights">🧠 AI Insights</button>
+                    <button class="nav-tab" data-tab="export">📤 Export</button>
+                </div>
+                
+                <div class="month-selector">
+                    <select id="monthSelect">
+                        <option value="0">January 2025</option>
+                        <option value="1">February 2025</option>
+                        <option value="2">March 2025</option>
+                        <option value="3">April 2025</option>
+                        <option value="4">May 2025</option>
+                        <option value="5">June 2025</option>
+                        <option value="6">July 2025</option>
+                        <option value="7">August 2025</option>
+                        <option value="8" selected>September 2025</option>
+                        <option value="9">October 2025</option>
+                        <option value="10">November 2025</option>
+                        <option value="11">December 2025</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Loading Screen -->
@@ -405,39 +798,144 @@
                 <span>Loading your expenses...</span>
             </div>
 
-            <!-- App Content -->
-            <div id="appContent" class="hidden">
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active hidden">
                 <div class="summary">
                     <div class="summary-card">
-                        <h3>🎉 Success!</h3>
-                        <div class="amount">Connected</div>
-                        <small>Your Firebase app is working</small>
+                        <h3>Total Spent</h3>
+                        <div class="amount total" id="totalAmount">€0.00</div>
+                        <small>This month</small>
+                        <div class="progress-bar">
+                            <div class="progress-fill budget-progress" style="width: 0%" id="totalProgress"></div>
+                        </div>
                     </div>
                     <div class="summary-card">
-                        <h3>☁️ Cloud Storage</h3>
-                        <div class="amount">Active</div>
-                        <small>Data syncs automatically</small>
+                        <h3>Budget Remaining</h3>
+                        <div class="amount budget" id="budgetRemaining">€0.00</div>
+                        <small>Left to spend</small>
+                        <div class="progress-bar">
+                            <div class="progress-fill budget-progress" style="width: 100%" id="budgetProgress"></div>
+                        </div>
                     </div>
                     <div class="summary-card">
-                        <h3>🔒 Secure Login</h3>
-                        <div class="amount">Protected</div>
-                        <small>Your data is private</small>
+                        <h3>Days Until Broke</h3>
+                        <div class="amount prediction" id="daysUntilBroke">∞</div>
+                        <small>At current rate</small>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Next Month Prediction</h3>
+                        <div class="amount prediction" id="nextMonthPrediction">€0.00</div>
+                        <small>Based on trends</small>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Estimated Waste</h3>
+                        <div class="amount waste" id="wasteAmount">€0.00</div>
+                        <small>Unnecessary expenses</small>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Daily Average</h3>
+                        <div class="amount avg" id="avgAmount">€0.00</div>
+                        <small>Per day spent</small>
                     </div>
                 </div>
-                
-                <div style="padding: 30px; text-align: center; color: var(--text-primary);">
-                    <h2>🚀 Firebase Integration Complete!</h2>
-                    <p style="margin-top: 15px; font-size: 1.1em;">
-                        Your expense tracker is now connected to Firebase. 
-                        <br>All your data will be saved to the cloud and accessible from any device.
-                    </p>
-                    <p style="margin-top: 15px; color: var(--text-secondary);">
-                        The full expense tracking features will be added in the next update.
-                    </p>
+
+                <div class="table-container">
+                    <table id="expenseTable">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Amount (€)</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Necessity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Other tabs -->
+            <div id="analytics-tab" class="tab-content hidden">
+                <div style="padding: 30px; text-align: center;">
+                    <h3>Analytics Coming Soon</h3>
+                    <p>Charts and analytics will be available in the next update.</p>
+                </div>
+            </div>
+
+            <div id="budgets-tab" class="tab-content hidden">
+                <div style="padding: 30px; text-align: center;">
+                    <h3>Budgets Coming Soon</h3>
+                    <p>Budget management will be available in the next update.</p>
+                </div>
+            </div>
+
+            <div id="insights-tab" class="tab-content hidden">
+                <div style="padding: 30px; text-align: center;">
+                    <h3>AI Insights Coming Soon</h3>
+                    <p>AI-powered insights will be available in the next update.</p>
+                </div>
+            </div>
+
+            <div id="export-tab" class="tab-content hidden">
+                <div style="padding: 30px; text-align: center;">
+                    <h3>Export Coming Soon</h3>
+                    <p>Export functionality will be available in the next update.</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Quick Add Modal -->
+    <div class="quick-add-modal" id="quickAddModal">
+        <div class="modal-content">
+            <h3 class="modal-title">⚡ Quick Add Expense</h3>
+            <div class="input-group">
+                <label>Amount (€)</label>
+                <input type="number" id="quickAmount" step="0.01" placeholder="0.00">
+            </div>
+            <div class="input-group">
+                <label>Category</label>
+                <select id="quickCategory">
+                    <option value="">Select category</option>
+                    <option value="Food & Dining">🍕 Food & Dining</option>
+                    <option value="Transportation">🚗 Transportation</option>
+                    <option value="Shopping">🛍️ Shopping</option>
+                    <option value="Entertainment">🎬 Entertainment</option>
+                    <option value="Bills & Utilities">💡 Bills & Utilities</option>
+                    <option value="Healthcare">🏥 Healthcare</option>
+                    <option value="Education">🎓 Education</option>
+                    <option value="Travel">✈️ Travel</option>
+                    <option value="Other">❓ Other</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Description</label>
+                <input type="text" id="quickDescription" placeholder="What did you buy?">
+            </div>
+            <div class="input-group">
+                <label>Necessity</label>
+                <select id="quickNecessity">
+                    <option value="Essential">Essential</option>
+                    <option value="Important">Important</option>
+                    <option value="Nice to have">Nice to have</option>
+                    <option value="Unnecessary">Unnecessary</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Day</label>
+                <input type="number" id="quickDay" min="1" max="31" value="1">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="cancelQuickAdd">Cancel</button>
+                <button class="btn btn-primary" id="saveQuickAdd">Add Expense</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Add Button -->
+    <button class="floating-add-btn" id="floatingBtn" style="display: none;">+</button>
 
     <!-- Toast Notifications -->
     <div id="toast" class="toast"></div>
@@ -465,6 +963,17 @@
 
         // Global variables
         let currentUser = null;
+        let expenses = {};
+        let budgets = {};
+        let currentMonth = 8; // September
+        let activeTab = 'dashboard';
+
+        const categories = [
+            'Food & Dining', 'Transportation', 'Shopping', 'Entertainment',
+            'Bills & Utilities', 'Healthcare', 'Education', 'Travel', 'Other'
+        ];
+
+        const necessityLevels = ['Essential', 'Important', 'Nice to have', 'Unnecessary'];
 
         // Utility functions
         function showError(message) {
@@ -493,23 +1002,469 @@
                 currentUser = user;
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('appSection').classList.remove('hidden');
+                document.getElementById('floatingBtn').style.display = 'flex';
                 document.getElementById('userEmail').textContent = user.email;
                 
-                // Simulate loading
-                setTimeout(() => {
-                    document.getElementById('loadingScreen').classList.add('hidden');
-                    document.getElementById('appContent').classList.remove('hidden');
-                }, 2000);
-                
-                showToast('Successfully signed in!', 'success');
+                await loadUserData();
+                initializeApp();
+                showToast('Welcome back!', 'success');
             } else {
                 currentUser = null;
                 document.getElementById('authSection').classList.remove('hidden');
                 document.getElementById('appSection').classList.add('hidden');
-                document.getElementById('loadingScreen').classList.remove('hidden');
-                document.getElementById('appContent').classList.add('hidden');
+                document.getElementById('floatingBtn').style.display = 'none';
             }
         });
+
+        // Data management functions
+        async function loadUserData() {
+            if (!currentUser) return;
+
+            try {
+                const expensesDoc = await db.collection('users').doc(currentUser.uid).collection('data').doc('expenses').get();
+                if (expensesDoc.exists) {
+                    expenses = expensesDoc.data() || {};
+                } else {
+                    expenses = {};
+                }
+
+                const budgetsDoc = await db.collection('users').doc(currentUser.uid).collection('data').doc('budgets').get();
+                if (budgetsDoc.exists) {
+                    budgets = budgetsDoc.data() || {};
+                } else {
+                    budgets = {};
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showToast('Error loading data', 'error');
+            }
+        }
+
+        async function saveExpenses() {
+            if (!currentUser) return;
+
+            try {
+                await db.collection('users').doc(currentUser.uid).collection('data').doc('expenses').set(expenses);
+            } catch (error) {
+                console.error('Error saving expenses:', error);
+                showToast('Error saving expenses', 'error');
+            }
+        }
+
+        async function saveBudgets() {
+            if (!currentUser) return;
+
+            try {
+                await db.collection('users').doc(currentUser.uid).collection('data').doc('budgets').set(budgets);
+                showToast('Budgets saved successfully!', 'success');
+            } catch (error) {
+                console.error('Error saving budgets:', error);
+                showToast('Error saving budgets', 'error');
+            }
+        }
+
+        // App initialization
+        function initializeApp() {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('dashboard-tab').classList.remove('hidden');
+            
+            initializeTheme();
+            initializeTable();
+            updateSummary();
+            setupEventListeners();
+        }
+
+        // Theme management
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('expenseTrackerTheme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeToggleText(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('expenseTrackerTheme', newTheme);
+            updateThemeToggleText(newTheme);
+        }
+
+        function updateThemeToggleText(theme) {
+            const toggle = document.getElementById('themeToggle');
+            toggle.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+
+        // Tab management
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + '-tab').classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            activeTab = tabName;
+            
+            if (tabName === 'dashboard') {
+                updateSummary();
+            }
+        }
+
+        // Event listeners setup
+        function setupEventListeners() {
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // Tab navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    showTab(tab.dataset.tab);
+                });
+            });
+
+            // Month selector
+            document.getElementById('monthSelect').addEventListener('change', function() {
+                currentMonth = parseInt(this.value);
+                initializeTable();
+                updateSummary();
+            });
+
+            // Quick add modal
+            document.getElementById('floatingBtn').addEventListener('click', openQuickAdd);
+            document.getElementById('cancelQuickAdd').addEventListener('click', closeQuickAdd);
+            document.getElementById('saveQuickAdd').addEventListener('click', saveQuickAdd);
+        }
+
+        // Table initialization
+        function initializeTable() {
+            const tableBody = document.getElementById('tableBody');
+            const daysInMonth = new Date(2025, currentMonth + 1, 0).getDate();
+            
+            tableBody.innerHTML = '';
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const key = `${currentMonth}-${day}`;
+                
+                if (!expenses[key]) {
+                    expenses[key] = [];
+                }
+
+                const dayHeaderRow = document.createElement('tr');
+                dayHeaderRow.className = 'day-header';
+                dayHeaderRow.setAttribute('data-day', day);
+                
+                const dayHeaderCell = document.createElement('td');
+                dayHeaderCell.colSpan = 6;
+                
+                const toggleIcon = document.createElement('span');
+                toggleIcon.className = 'toggle-icon';
+                toggleIcon.textContent = '▼';
+                
+                const dayText = document.createElement('span');
+                dayText.textContent = `Day ${day} - Total: €${calculateDayTotal(expenses[key]).toFixed(2)}`;
+                
+                dayHeaderCell.appendChild(toggleIcon);
+                dayHeaderCell.appendChild(dayText);
+                dayHeaderRow.appendChild(dayHeaderCell);
+                
+                const dayContentRow = document.createElement('tr');
+                dayContentRow.className = 'day-content';
+                dayContentRow.id = `day-${day}-content`;
+                
+                const dayContentCell = document.createElement('td');
+                dayContentCell.colSpan = 6;
+                
+                const innerTable = document.createElement('table');
+                innerTable.className = 'inner-table';
+                innerTable.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Amount (€)</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Necessity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="day-${day}-expenses"></tbody>
+                `;
+                
+                const addButton = document.createElement('button');
+                addButton.className = 'add-expense-btn';
+                addButton.textContent = '+ Add Expense';
+                addButton.onclick = () => addExpense(day);
+                
+                dayContentCell.appendChild(innerTable);
+                dayContentCell.appendChild(addButton);
+                dayContentRow.appendChild(dayContentCell);
+                
+                tableBody.appendChild(dayHeaderRow);
+                tableBody.appendChild(dayContentRow);
+                
+                populateDayExpenses(day);
+                
+                dayHeaderRow.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                    dayContentRow.classList.toggle('show');
+                });
+            }
+
+            updateSummary();
+        }
+
+        function populateDayExpenses(day) {
+            const key = `${currentMonth}-${day}`;
+            const dayExpensesBody = document.getElementById(`day-${day}-expenses`);
+            
+            dayExpensesBody.innerHTML = '';
+            
+            if (expenses[key].length === 0) {
+                addExpense(day);
+            } else {
+                expenses[key].forEach((expense, index) => {
+                    addExpenseRow(day, index, expense);
+                });
+            }
+            
+            updateDayHeaderTotal(day);
+        }
+
+        async function addExpense(day) {
+            const key = `${currentMonth}-${day}`;
+            
+            if (!expenses[key]) {
+                expenses[key] = [];
+            }
+            
+            expenses[key].push({
+                amount: 0,
+                category: '',
+                description: '',
+                necessity: 'Essential'
+            });
+            
+            await saveExpenses();
+            addExpenseRow(day, expenses[key].length - 1, expenses[key][expenses[key].length - 1]);
+            updateDayHeaderTotal(day);
+            updateSummary();
+        }
+
+        function addExpenseRow(day, index, expense) {
+            const dayExpensesBody = document.getElementById(`day-${day}-expenses`);
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <input type="number" value="${expense.amount || ''}" placeholder="0.00" step="0.01" 
+                           data-day="${day}" data-index="${index}" data-field="amount">
+                </td>
+                <td>
+                    <select data-day="${day}" data-index="${index}" data-field="category">
+                        <option value="">Select category</option>
+                        ${categories.map(cat => 
+                            `<option value="${cat}" ${expense.category === cat ? 'selected' : ''}>${cat}</option>`
+                        ).join('')}
+                    </select>
+                </td>
+                <td>
+                    <input type="text" value="${expense.description || ''}" placeholder="What did you buy?" 
+                           data-day="${day}" data-index="${index}" data-field="description">
+                </td>
+                <td>
+                    <select data-day="${day}" data-index="${index}" data-field="necessity">
+                        ${necessityLevels.map(level => 
+                            `<option value="${level}" ${expense.necessity === level ? 'selected' : ''}>${level}</option>`
+                        ).join('')}
+                    </select>
+                </td>
+                <td>
+                    <button class="remove-expense-btn" data-day="${day}" data-index="${index}">Remove</button>
+                </td>
+            `;
+            
+            // Add event listeners
+            row.querySelectorAll('input, select').forEach(input => {
+                input.addEventListener('change', handleExpenseUpdate);
+            });
+            
+            row.querySelector('.remove-expense-btn').addEventListener('click', handleExpenseRemove);
+            
+            dayExpensesBody.appendChild(row);
+        }
+
+        async function handleExpenseUpdate(event) {
+            const day = parseInt(event.target.dataset.day);
+            const index = parseInt(event.target.dataset.index);
+            const field = event.target.dataset.field;
+            const value = event.target.value;
+            
+            const key = `${currentMonth}-${day}`;
+            
+            if (!expenses[key] || !expenses[key][index]) return;
+
+            if (field === 'amount') {
+                expenses[key][index][field] = parseFloat(value) || 0;
+            } else {
+                expenses[key][index][field] = value;
+            }
+
+            await saveExpenses();
+            updateDayHeaderTotal(day);
+            updateSummary();
+        }
+
+        async function handleExpenseRemove(event) {
+            const day = parseInt(event.target.dataset.day);
+            const index = parseInt(event.target.dataset.index);
+            const key = `${currentMonth}-${day}`;
+            
+            if (expenses[key] && expenses[key][index]) {
+                expenses[key].splice(index, 1);
+                
+                if (expenses[key].length === 0) {
+                    expenses[key].push({
+                        amount: 0,
+                        category: '',
+                        description: '',
+                        necessity: 'Essential'
+                    });
+                }
+                
+                await saveExpenses();
+                populateDayExpenses(day);
+                updateSummary();
+            }
+        }
+
+        function calculateDayTotal(dayExpenses) {
+            return dayExpenses.reduce((total, expense) => total + (expense.amount || 0), 0);
+        }
+
+        function updateDayHeaderTotal(day) {
+            const key = `${currentMonth}-${day}`;
+            const dayHeader = document.querySelector(`.day-header[data-day="${day}"] td`);
+            
+            if (dayHeader) {
+                const total = calculateDayTotal(expenses[key]);
+                dayHeader.innerHTML = `
+                    <span class="toggle-icon">▼</span>
+                    Day ${day} - Total: €${total.toFixed(2)}
+                `;
+            }
+        }
+
+        function updateSummary() {
+            let total = 0;
+            let waste = 0;
+            let totalBudget = Object.values(budgets).reduce((sum, budget) => sum + (budget || 0), 0);
+            let daysWithExpenses = 0;
+
+            Object.keys(expenses).forEach(key => {
+                if (key.startsWith(currentMonth + '-')) {
+                    const dayExpenses = expenses[key];
+                    const dayTotal = calculateDayTotal(dayExpenses);
+                    
+                    total += dayTotal;
+                    if (dayTotal > 0) daysWithExpenses++;
+                    
+                    dayExpenses.forEach(expense => {
+                        const amount = expense.amount || 0;
+                        if (expense.necessity === 'Unnecessary') {
+                            waste += amount;
+                        } else if (expense.necessity === 'Nice to have') {
+                            waste += amount * 0.5;
+                        }
+                    });
+                }
+            });
+
+            document.getElementById('totalAmount').textContent = `€${total.toFixed(2)}`;
+            document.getElementById('wasteAmount').textContent = `€${waste.toFixed(2)}`;
+            document.getElementById('avgAmount').textContent = `€${daysWithExpenses ? (total / daysWithExpenses).toFixed(2) : '0.00'}`;
+            
+            const budgetRemaining = Math.max(0, totalBudget - total);
+            document.getElementById('budgetRemaining').textContent = `€${budgetRemaining.toFixed(2)}`;
+            
+            const totalProgress = totalBudget > 0 ? Math.min(100, (total / totalBudget) * 100) : 0;
+            document.getElementById('totalProgress').style.width = `${totalProgress}%`;
+            document.getElementById('budgetProgress').style.width = `${Math.max(0, 100 - totalProgress)}%`;
+            
+            const dailyAverage = daysWithExpenses > 0 ? total / daysWithExpenses : 0;
+            const daysUntilBroke = dailyAverage > 0 ? Math.floor(budgetRemaining / dailyAverage) : '∞';
+            document.getElementById('daysUntilBroke').textContent = daysUntilBroke;
+            
+            const prediction = total * 1.05;
+            document.getElementById('nextMonthPrediction').textContent = `€${prediction.toFixed(2)}`;
+            
+            const totalProgressBar = document.getElementById('totalProgress');
+            if (totalProgress > 90) {
+                totalProgressBar.className = 'progress-fill over-budget';
+            } else {
+                totalProgressBar.className = 'progress-fill budget-progress';
+            }
+        }
+
+        // Quick add functionality
+        function openQuickAdd(specificDay = null) {
+            document.getElementById('quickAddModal').classList.add('active');
+            document.getElementById('quickAmount').focus();
+            
+            const dayToSet = specificDay || new Date().getDate();
+            document.getElementById('quickDay').value = dayToSet;
+        }
+
+        function closeQuickAdd() {
+            document.getElementById('quickAddModal').classList.remove('active');
+        }
+
+        async function saveQuickAdd() {
+            const amount = parseFloat(document.getElementById('quickAmount').value);
+            const category = document.getElementById('quickCategory').value;
+            const description = document.getElementById('quickDescription').value;
+            const necessity = document.getElementById('quickNecessity').value;
+            const day = parseInt(document.getElementById('quickDay').value);
+            
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+            
+            if (!category) {
+                showToast('Please select a category', 'error');
+                return;
+            }
+            
+            const key = `${currentMonth}-${day}`;
+            if (!expenses[key]) {
+                expenses[key] = [];
+            }
+            
+            expenses[key].push({
+                amount: amount,
+                category: category,
+                description: description,
+                necessity: necessity
+            });
+            
+            await saveExpenses();
+            
+            // Clear form
+            document.getElementById('quickAmount').value = '';
+            document.getElementById('quickCategory').value = '';
+            document.getElementById('quickDescription').value = '';
+            document.getElementById('quickNecessity').value = 'Essential';
+            
+            closeQuickAdd();
+            showToast('Expense added successfully!', 'success');
+            
+            if (activeTab === 'dashboard') {
+                initializeTable();
+            }
+        }
 
         // Authentication event listeners
         document.getElementById('loginBtn').addEventListener('click', async () => {
@@ -574,22 +1529,6 @@
             document.getElementById('registerForm').classList.add('hidden');
             document.getElementById('loginForm').classList.remove('hidden');
         });
-
-        // Test Firestore connection
-        async function testFirestore() {
-            if (currentUser) {
-                try {
-                    await db.collection('test').doc('test').set({
-                        message: 'Firebase is working!',
-                        user: currentUser.uid,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    console.log('Firestore test successful!');
-                } catch (error) {
-                    console.error('Firestore test failed:', error);
-                }
-            }
-        }
     </script>
 </body>
 </html>
